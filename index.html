@@ -2333,9 +2333,9 @@
       width: 480px;
       height: 480px;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba(255,91,46,0.10) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,91,46,0.055) 0%, transparent 70%);
       transform: translate(-50%, -50%);
-      transition: left 0.18s ease, top 0.18s ease;
+      transition: left 0.28s ease, top 0.28s ease;
       mix-blend-mode: screen;
       left: -999px; top: -999px;
     `;
@@ -2354,7 +2354,7 @@
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         card.style.setProperty("--mx", x + "%");
         card.style.setProperty("--my", y + "%");
-        card.style.backgroundImage = `radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.055) 0%, transparent 65%), ${getComputedStyle(card).backgroundImage.replace(/radial-gradient\(circle at var.*?65%\),?\s*/g, "")}`;
+        card.style.backgroundImage = `radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.028) 0%, transparent 60%), ${getComputedStyle(card).backgroundImage.replace(/radial-gradient\(circle at var.*?60%\),?\s*/g, "")}`;
       });
       card.addEventListener("mouseleave", () => {
         card.style.backgroundImage = "";
@@ -2402,7 +2402,7 @@
         const rect = card.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `translateY(-7px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg)`;
+        card.style.transform = `translateY(-7px) rotateY(${x * 3}deg) rotateX(${-y * 2}deg)`;
         card.style.transition = "transform 0.08s ease";
       });
       card.addEventListener("mouseleave", () => {
