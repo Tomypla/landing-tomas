@@ -2346,18 +2346,30 @@
       cursorGlow.style.top = e.clientY + "px";
     });
 
-    // 2. CARD SPOTLIGHT — luz interna que sigue el mouse dentro de cada card
+    // 2. CARD SPOTLIGHT — overlay fino que sigue el cursor, sin tocar el background
     document.querySelectorAll(".fwp-card, .quick-card, .hero-btn, .service-card, .mini-card").forEach((card) => {
+      const shine = document.createElement("div");
+      shine.style.cssText = `
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        background: radial-gradient(circle 90px at var(--sx, 50%) var(--sy, 50%), rgba(255,255,255,0.07), transparent 100%);
+      `;
+      if (getComputedStyle(card).position === "static") card.style.position = "relative";
+      card.appendChild(shine);
+
       card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        card.style.setProperty("--mx", x + "%");
-        card.style.setProperty("--my", y + "%");
-        card.style.backgroundImage = `radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.014) 0%, transparent 55%), ${getComputedStyle(card).backgroundImage.replace(/radial-gradient\(circle at var.*?55%\),?\s*/g, "")}`;
+        shine.style.setProperty("--sx", (e.clientX - rect.left) + "px");
+        shine.style.setProperty("--sy", (e.clientY - rect.top) + "px");
+        shine.style.opacity = "1";
       });
       card.addEventListener("mouseleave", () => {
-        card.style.backgroundImage = "";
+        shine.style.opacity = "0";
       });
     });
 
