@@ -1335,16 +1335,24 @@
     .reveal {
       opacity: 0;
       transform: translateY(28px);
-      filter: blur(8px);
+      filter: blur(6px);
       transition:
-        opacity 0.82s cubic-bezier(.16,1,.3,1),
-        transform 0.82s cubic-bezier(.16,1,.3,1),
-        filter 0.82s cubic-bezier(.16,1,.3,1);
+        opacity 0.9s cubic-bezier(.16,1,.3,1),
+        transform 0.9s cubic-bezier(.16,1,.3,1),
+        filter 0.9s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.from-left {
+      transform: translateX(-32px);
+    }
+
+    .reveal.from-right {
+      transform: translateX(32px);
     }
 
     .reveal.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(0, 0);
       filter: blur(0);
     }
 
@@ -1356,6 +1364,53 @@
     .stagger.visible > *:nth-child(2) { animation-delay: 0.12s; }
     .stagger.visible > *:nth-child(3) { animation-delay: 0.19s; }
     .stagger.visible > *:nth-child(4) { animation-delay: 0.26s; }
+
+    /* SHINE SWEEP en banners */
+    .shine-banner {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shine-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,0.055) 50%,
+        transparent 70%
+      );
+      transform: translateX(-100%);
+      animation: bannerShine 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes bannerShine {
+      0%, 60%  { transform: translateX(-110%); opacity: 0; }
+      65%      { opacity: 1; }
+      100%     { transform: translateX(110%); opacity: 0; }
+    }
+
+    /* GLOW BORDER en hero-btn hover */
+    .hero-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255,159,47,0), rgba(255,159,47,0.5), rgba(255,75,56,0));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .hero-btn:hover::before {
+      opacity: 1;
+    }
 
     @keyframes gridMove {
       from { transform: translate3d(0,0,0); }
@@ -1843,12 +1898,12 @@
             </p>
           </div>
 
-          <div class="meli-logo-box reveal">
+          <div class="meli-logo-box reveal shine-banner">
             <img src="image(625).png" alt="MercadoLibre" />
           </div>
 
           <div class="meli-actions">
-            <div class="quick-card reveal">
+            <div class="quick-card reveal from-left">
               <h3>Ver mis recomendaciones</h3>
               <p>Tecnología, moda, hogar, deportes y más. Encontrá lo que buscás al mejor precio.</p>
               <a href="https://meli.la/26ksxvN" target="_blank" rel="noopener" class="btn-yellow">
@@ -1864,7 +1919,7 @@
               </a>
             </div>
 
-            <div class="quick-card reveal">
+            <div class="quick-card reveal from-right">
               <h3>Sumate a la comunidad</h3>
               <p>Recibi ofertas y descuentos antes que nadie directo en WhatsApp.</p>
               <a href="https://chat.whatsapp.com/GV0qilPoTiu5HmHwWAbAzT" target="_blank" rel="noopener" class="btn-green">
@@ -2005,7 +2060,7 @@
       <!-- DISTRIBUIDOR -->
       <section>
         <div class="container">
-          <div class="distributor-box reveal">
+          <div class="distributor-box reveal shine-banner">
             <div class="tag">Oportunidad de negocio</div>
 
             <h2>
@@ -2048,7 +2103,7 @@
       <!-- SERVICIOS -->
       <section id="servicios" class="services-section">
         <div class="container">
-          <div class="service-visual reveal">
+          <div class="service-visual reveal shine-banner">
             <img src="Servicio horizontal.png" alt="Servicios digitales" style="width:100%;height:auto;border-radius:22px;display:block;" />
           </div>
 
@@ -2408,7 +2463,17 @@
 
     statNums.forEach((el) => statObserver.observe(el));
 
-    // 4. TILT 3D — las FWP cards se inclinan siguiendo el mouse
+    // 4. PARALLAX suave en hero al hacer scroll
+    const heroInner = document.querySelector(".hero-inner");
+    window.addEventListener("scroll", () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight && heroInner) {
+        heroInner.style.transform = `translateY(${y * 0.18}px)`;
+        heroInner.style.opacity = 1 - (y / window.innerHeight) * 1.2;
+      }
+    }, { passive: true });
+
+    // 5. TILT 3D — las FWP cards se inclinan siguiendo el mouse
     document.querySelectorAll(".fwp-card").forEach((card) => {
       card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
