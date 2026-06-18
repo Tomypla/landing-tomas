@@ -2463,15 +2463,17 @@
 
     statNums.forEach((el) => statObserver.observe(el));
 
-    // 4. PARALLAX suave en hero al hacer scroll
+    // 4. PARALLAX suave en hero al hacer scroll — solo desktop
     const heroInner = document.querySelector(".hero-inner");
-    window.addEventListener("scroll", () => {
-      const y = window.scrollY;
-      if (y < window.innerHeight && heroInner) {
-        heroInner.style.transform = `translateY(${y * 0.18}px)`;
-        heroInner.style.opacity = 1 - (y / window.innerHeight) * 1.2;
-      }
-    }, { passive: true });
+    if (window.innerWidth > 760) {
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY;
+        if (y < window.innerHeight && heroInner) {
+          heroInner.style.transform = `translateY(${y * 0.18}px)`;
+          heroInner.style.opacity = 1 - (y / window.innerHeight) * 1.2;
+        }
+      }, { passive: true });
+    }
 
     // 5. TILT 3D — las FWP cards se inclinan siguiendo el mouse
     document.querySelectorAll(".fwp-card").forEach((card) => {
